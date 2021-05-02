@@ -1,0 +1,54 @@
+from PyQt5.QtWidgets import *
+import sys
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(15, GPIO.OUT)
+GPIO.setup(11, GPIO.OUT)
+GPIO.setup(7, GPIO.OUT)
+
+GPIO.output(7,0)
+GPIO.output(11,0)
+GPIO.output(15,0)
+
+class Window(QWidget):
+ def __init__(self):
+  super().__init__()
+  win = QMainWindow()
+  win.setWindowTitle("LED toggler")
+
+  layout = QHBoxLayout()
+
+  self.rdbRed = QRadioButton("Red")
+  self.rdbRed.toggled.connect(self.onClick)
+  layout.addWidget(self.rdbRed)
+
+  self.rdbGreen = QRadioButton("Green")
+  self.rdbGreen.toggled.connect(self.onClick)
+  layout.addWidget(self.rdbGreen)
+
+  self.rdbBlue = QRadioButton("Blue")
+  self.rdbBlue.toggled.connect(self.onClick)
+  layout.addWidget(self.rdbBlue)
+
+  self.setLayout(layout)
+
+ def onClick(self):
+  if self.rdbRed.isChecked():
+   GPIO.output(15,1)
+   GPIO.output(11,0)
+   GPIO.output(7,0)
+  if self.rdbGreen.isChecked():
+   GPIO.output(11,1)
+   GPIO.output(15,0)
+   GPIO.output(7,0)
+
+  if self.rdbBlue.isChecked():
+   GPIO.output(7,1)
+   GPIO.output(11,0)
+   GPIO.output(15,0)
+
+
+app = QApplication(sys.argv)
+window = Window()
+window.show()
